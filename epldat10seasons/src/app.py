@@ -1,7 +1,7 @@
 
 import streamlit as st
 import pandas as pd
-#import plotly.figure_factory as ff
+import plotly.figure_factory as ff
 import numpy as np
 import plotly.express as px
 
@@ -9,19 +9,20 @@ import plotly.express as px
 
 
 
-data = pd.read_csv("C:/Users/A.M. MUKTAR/Documents/epldat10seasons/Dataset/all_season_table.csv")
-clubs_df = pd.read_csv("C:/Users/A.M. MUKTAR/Documents/epldat10seasons/Dataset/All_tables.csv")
+data = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Dataset/all_season_table.csv")
+clubs_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Dataset/All_tables.csv")
 
 club_df1 = clubs_df.groupby(by=['Club','Season'], as_index=False).sum()
 club_df2 = clubs_df.groupby(by=['Club','Season'], as_index=False)['Points'].sum()
 club_df3 = clubs_df.groupby(by=['Club','Season'], as_index=False)['GoalsScored','GoalsConceded'].sum()
+club_df4 = club_df3.groupby(by='Club', as_index=False)['GoalsScored','GoalsConceded'].sum()
 
 
 # Page Headers
 st.subheader('An Insight Into Ten season of EPL Football')
 
 # Page Tabs creation
-tab1, tab2, tab3 = st.tabs(["Total Point per season", "Total goals team per Season","Total winning per season"])
+tab1, tab2, tab3 = st.tabs(["Total Point per Team per Season", "Total Goals Scored per team per Season",  "Total Goals Conceded per Team per Season"])
 
 with tab1:
     option = st.selectbox(
@@ -33,6 +34,7 @@ with tab1:
     if option in point.keys():
         fig1 = px.bar(data, x='Club', y=point.get(option),hover_data=[point.get(option)], color='Club',labels={'pop':'population of Canada'}, height=400)
         st.plotly_chart(fig1, use_container_width=True)
+        
 with tab2:
     st.write("Goals Per team / Per season")
 
@@ -49,7 +51,7 @@ with tab2:
 
 
 with tab3:
-    st.header(" Total goals Conceded Per Team Per Season")
+    st.header(" Total goals Conceded Per Team / Per Season")
 
     
     option = st.selectbox(
@@ -64,14 +66,14 @@ with tab3:
 
 
 # Page Tabs creation
-tab4, tab5, tab6 = st.tabs(["Clubs Stats     ", "Point Distribution by Team Accross Season", "      View Past Predictions"])
+tab4, tab5, tab6 = st.tabs(["Position and games Lost Per Season  ", "Points  Distribution by Team Accross 10 Season", "Win Percentage Per Team Per Season"])
 
 with tab4:
-    st.write("Club Statistics over ten Seasons")
+    st.write(" Position and Games Lost and Per Season")
     
     fig4 = px.sunburst(
     club_df1,
-    path=['Season', 'Club'], values='Points',
+    path=['Season', 'Club'], values='Position', hover_data=['Losses','Position'],
     color='Club'
     )
     st.plotly_chart(fig4, use_container_width=True)
@@ -81,36 +83,50 @@ with tab4:
 with tab5:
     st.header("Total point accross All seasons")
 
-    fig5 = px.line(club_df2, x="Season", y="Points", color='Club')
+    fig5 = px.line(club_df2, x="Season", y="Points", color='Club', hover_data=['Points'])
     st.plotly_chart(fig5, use_container_width=True)
 
 
 
 with tab6:
-    st.header("This is tab 6")
-    fig6 = px.treemap(club_df2, path=[ 'Season','Club'], values='Points', color='Club')
+    st.header("Win Percentage Per Team Per Season")
+    fig6 = px.treemap(clubs_df, path=[ 'Season','Club'], values='Win_percentage', color='Club',hover_data=['Draw_Percentage','Loss_Percentage'])
     st.plotly_chart(fig6, use_container_width=True)
 
 
 # Page Tabs creation
-tab7, tab8, tab9 = st.tabs(["Goals scored ", "Goals Scored Distribution by Team", "View Past Predictions"])
+tab7, tab8, tab9 = st.tabs(["Goals scored Per team for Each Season", "Goals Scored & Distribution by Team", "Goals Percentage Across all Season"])
 with tab7:
-    st.write("Club Statistics over ten Seasons")
-    
+    st.header("Goals scored Per team for Each Season")
+    option = st.selectbox(
+        'Select Season?',
+        club_df3.Club.unique(), key='clubs')
 
+    if option in club_df3.Club.unique():
+        fig9 = px.histogram(club_df3[club_df3['Club'] == option], x='Club', y="GoalsScored",
+                color='Season', barmode='group',
+                height=400)
+        st.plotly_chart(fig9, use_container_width=True)    
 
-    
+    else:
+        st.write("Team Not Selected")    
 
+        
 with tab8:
-    st.header("Total point accross All seasons")
+    st.header("Total Goals Scored and Conceded Per team")
 
-    fig10 = px.line(club_df3, x="Club", y="GoalsScored", color='Club')
+    #fig10 = px.pie(club_df4, x="Club", y="GoalsScored", color='Club')
+    fig10 = px.funnel(club_df4, x='GoalsScored', y='Club', color='Club', hover_data=['GoalsConceded'], height=1000)
     st.plotly_chart(fig10, use_container_width=True)
 
 
 
+
 with tab9:
-    st.header("This is tab 9")
-    fig11 = px.treemap(club_df3, path=[ 'Club','GoalsScored'], values='GoalsScored', color='Club')
+    st.header("Total Goals & Percentage Across 10 Seasons")
+    # fig11 = px.treemap(club_df3, path=[ 'Season','Club'], values='GoalsScored', color='Club',hover_data=['GoalsScored','GoalsConceded'])
+    # st.plotly_chart(fig11, use_container_width=True)
+
+    fig11 = px.pie(club_df4, values='GoalsScored', names='Club', title='Total Goals & Percentage  Scored By teams Across Ten Seasons')
     st.plotly_chart(fig11, use_container_width=True)
 
