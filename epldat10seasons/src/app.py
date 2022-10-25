@@ -159,7 +159,7 @@ with tab9:
 with st.expander("Insight 4"):
     st.header("Fair Play Stats")
     # Page Tabs creation
-    tab10, tab11, tab12 = st.tabs(["Goals scored Per team for Each Season", "Goals Scored & Distribution by Team", "Goals Percentage Across all Season"])
+    tab10, tab11, tab12 = st.tabs(["Total Yellow Cards Accross", "Red Cards", "Total Cards Issued By Referees"])
  
 with tab10:
     st.dataframe(fairplay_df)
@@ -167,3 +167,6 @@ with tab10:
 
 with tab11:
     st.dataframe(referee_df)
+
+with tab12:
+    st.write("This is tab 12")
