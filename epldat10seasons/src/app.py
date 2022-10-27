@@ -9,11 +9,11 @@ from PIL import Image
 
 # Loading Data and DataFrame
 
-data = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Dataset/all_season_table.csv")
-clubs_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Dataset/All_tables.csv")
-extra_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Dataset/epl-allseasons-matchstats.csv")
+data = pd.read_csv("all_season_table.csv")
+clubs_df = pd.read_csv("All_tables.csv")
+extra_df = pd.read_csv("epl-allseasons-matchstats.csv")
 
-#Game play
+
 club_df1 = clubs_df.groupby(by=['Club','Season'], as_index=False).sum()
 club_df2 = clubs_df.groupby(by=['Club','Season'], as_index=False)['Points'].sum()
 club_df3 = clubs_df.groupby(by=['Club','Season'], as_index=False)['GoalsScored','GoalsConceded'].sum()
@@ -35,7 +35,7 @@ referee_df["Total_RedCards"] = referee_df["HomeRedCards"] + referee_df["AwayRedC
 
 #Site Image/logo
 
-image = Image.open('C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Images/pl.png')
+image = Image.open('pl.png')
 
 st.image(image, caption='The English Premier League')
 
