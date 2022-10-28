@@ -28,7 +28,7 @@ fairplay_df["Total_Fouls"] = fairplay_df["HomeFouls"] + fairplay_df["AwayFouls"]
 
 #Referee 
 referee_df = extra_df.groupby(by="Referee", as_index=False)["HomeYellowCards","AwayYellowCards","HomeRedCards","AwayRedCards"].sum()
-referee_df["Total_YellowCards"] = referee_df["HomeYellowCards"] + referee_df["AwayYellowCards"]
+referee_df["Total_YellowCards"] = referee_df["HomeYellowCards"] + referee_df["AwayYellowCards"]                                                                                                                
 referee_df["Total_RedCards"] = referee_df["HomeRedCards"] + referee_df["AwayRedCards"]
 
 
@@ -40,15 +40,11 @@ image = Image.open('pl.png')
 st.image(image, caption='The English Premier League')
 
 
-
-
-
 # Page Headers
 st.subheader('An Insight Into Ten season of EPL Football 2010 - 2020')
 
 
-
-with st.expander("Insight 1"):
+with st.expander("Visualization 1"):
     # Page Tabs creation
     tab1, tab2, tab3 = st.tabs(["Total Point per Team per Season", "Total Goals Scored per team per Season",  "Total Goals Conceded per Team per Season"])
 
@@ -92,36 +88,32 @@ with st.expander("Insight 1"):
             st.plotly_chart(fig3, use_container_width=True)
 
 
-with st.expander("Insight 2"):
+with st.expander("Visualization 2"):
     # Page Tabs creation
-    tab4, tab5, tab6 = st.tabs(["Position and games Lost Per Season  ", "Points  Distribution by Team Accross 10 Season", "Win Percentage Per Team Per Season"])
+    tab4, tab5, tab6 = st.tabs(["Position and games Lost Per Season  ", "Points Distribution by Team Across 10 Season", "Win Percentage Per Team Per Season"])
 
     with tab4:
-        st.write(" Position and Games Lost and Per Season")
+        st.header(" Position and Games Lost and Per Season")
         
         fig4 = px.sunburst(
         club_df1,
         path=['Season', 'Club'], values='Position', hover_data=['Losses','Position'],
         color='Club'
         )
-        st.plotly_chart(fig4, use_container_width=True)
-
-        
+        st.plotly_chart(fig4, use_container_width=True)   
 
     with tab5:
-        st.header("Total point accross All seasons")
+        st.header("Total point across All seasons")
 
         fig5 = px.line(club_df2, x="Season", y="Points", color='Club', hover_data=['Points'])
         st.plotly_chart(fig5, use_container_width=True)
-
-
 
     with tab6:
         st.header("Win Percentage Per Team Per Season")
         fig6 = px.treemap(clubs_df, path=[ 'Season','Club'], values='Win_percentage', color='Club',hover_data=['Draw_Percentage','Loss_Percentage'])
         st.plotly_chart(fig6, use_container_width=True)
 
-with st.expander("Insight 3"):
+with st.expander("Visualization 3"):
     # Page Tabs creation
     tab7, tab8, tab9 = st.tabs(["Goals scored Per team for Each Season", "Goals Scored & Distribution by Team", "Goals Percentage Across all Season"])
     with tab7:
@@ -144,29 +136,32 @@ with st.expander("Insight 3"):
         st.header("Total Goals Scored and Conceded Per team")
 
         #fig10 = px.pie(club_df4, x="Club", y="GoalsScored", color='Club')
-        fig10 = px.funnel(club_df4, x='GoalsScored', y='Club', color='Club', hover_data=['GoalsConceded'], height=1000)
+        fig10 = px.funnel(club_df4, x='GoalsScored', y='Club', color='Club', hover_data=['GoalsConceded'], height=1000, title='FUNNEL PLOT')
         st.plotly_chart(fig10, use_container_width=True)
-
-
-
 
 with tab9:
     st.header("Total Goals & Percentage Across 10 Seasons")
-    fig11 = px.pie(club_df4, values='GoalsScored', names='Club', title='Total Goals & Percentage  Scored By teams Across Ten Seasons')
+    fig11 = px.pie(club_df4, values='GoalsScored', names='Club')
     st.plotly_chart(fig11, use_container_width=True)
 
 
-with st.expander("Insight 4"):
+with st.expander("Visualization 4"):
     st.header("Fair Play Stats")
     # Page Tabs creation
-    tab10, tab11, tab12 = st.tabs(["Total Yellow Cards Accross", "Red Cards", "Total Cards Issued By Referees"])
+    tab10, tab11, tab12 = st.tabs(["Total Yellow Cards per club", "Total Red Cards per club", "Total Cards Issued By Referees"])
  
 with tab10:
-    st.dataframe(fairplay_df)
-
+    st.header("BOX PLOT")
+    fig12 = px.box(fairplay_df, x='Total_YellowCards', y='HomeTeam', color='HomeTeam', hover_data=['Total_YellowCards'], height=500, width=700, points='all', title='Total Yellow Cards per club')
+    fig12.update_traces(quartilemethod="exclusive")
+    st.plotly_chart(fig12, use_container_width=True)
 
 with tab11:
-    st.dataframe(referee_df)
-
+    st.header("STRIP CHART")
+    fig13 = px.strip(fairplay_df, x='Total_RedCards', y='HomeTeam', color='HomeTeam', hover_data=['Total_RedCards'], title='Total Red Cards per club')
+    st.plotly_chart(fig13, use_container_width=True)
 with tab12:
-    st.write("This is tab 12")
+    st.header('DONUT CHART')
+    
+    fig14 = px.pie(referee_df, values='Total_YellowCards', names='Referee', hole=.4, height=1000, title="Total Yellow Cards Issued by each Refree")
+    st.plotly_chart(fig14, use_container_width=True)
