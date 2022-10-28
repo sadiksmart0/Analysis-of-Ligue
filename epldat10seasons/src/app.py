@@ -1,4 +1,6 @@
 
+# Importing some packages
+
 import streamlit as st
 import pandas as pd
 import plotly.figure_factory as ff
@@ -13,6 +15,7 @@ data = pd.read_csv("all_season_table.csv")
 clubs_df = pd.read_csv("All_tables.csv")
 extra_df = pd.read_csv("epl-allseasons-matchstats.csv")
 
+# Grouping the dataset
 
 club_df1 = clubs_df.groupby(by=['Club','Season'], as_index=False).sum()
 club_df2 = clubs_df.groupby(by=['Club','Season'], as_index=False)['Points'].sum()
@@ -26,12 +29,10 @@ fairplay_df["Total_YellowCards"] = fairplay_df["HomeYellowCards"] + fairplay_df[
 fairplay_df["Total_RedCards"] = fairplay_df["HomeRedCards"] + fairplay_df["AwayRedCards"]
 fairplay_df["Total_Fouls"] = fairplay_df["HomeFouls"] + fairplay_df["AwayFouls"]
 
-#Referee 
+#Referee Dataset
 referee_df = extra_df.groupby(by="Referee", as_index=False)["HomeYellowCards","AwayYellowCards","HomeRedCards","AwayRedCards"].sum()
 referee_df["Total_YellowCards"] = referee_df["HomeYellowCards"] + referee_df["AwayYellowCards"]                                                                                                                
 referee_df["Total_RedCards"] = referee_df["HomeRedCards"] + referee_df["AwayRedCards"]
-
-
 
 #Site Image/logo
 
@@ -56,7 +57,7 @@ with st.expander("Visualization 1"):
         point = {'2010/11':'Points10_11','2011/12':'Points11_12','2012/13':'Points12_13','2013/14':'Points13_14','2014/15':'Points14_15','2015/16':'Points15_16','2016/17':'Points16_17','2017/18':'Points17_18','2018/19':'Points18_19','2019/20':'Points19_20'}
         st.header("Total Points Per Team for Season ", option)
         if option in point.keys():
-            fig1 = px.bar(data, x='Club', y=point.get(option),hover_data=[point.get(option)], color='Club',labels={'pop':'population of Canada'}, height=400)
+            fig1 = px.bar(data, x='Club', y=point.get(option),hover_data=[point.get(option)], color='Club',labels={'pop':'population of Canada'}, height=400, title='BAR CHART')
             st.plotly_chart(fig1, use_container_width=True)
             
     with tab2:
@@ -70,12 +71,12 @@ with st.expander("Visualization 1"):
         goals = {'2010/11':'GoalsScored10_11','2011/12':'GoalsScored11_12','2012/13':'GoalsScored12_13','2013/14':'GoalsScored13_14','2014/15':'GoalsScored14_15','2015/16':'GoalsScored15_16','2016/17':'GoalsScored16_17','2017/18':'GoalsScored17_18','2018/19':'GoalsScored18_19','2019/20':'GoalsScored19_20'}
         st.header("Total goals scored by Each Team in Season :", option)
         if option in point.keys():
-            fig2 = px.scatter(data, x='Club', y=goals.get(option), size_max=50,size=goals.get(option) ,hover_data=[goals.get(option)], color='Club',labels={'pop':'population of Canada'}, height=400)
+            fig2 = px.scatter(data, x='Club', y=goals.get(option), size_max=50,size=goals.get(option) ,hover_data=[goals.get(option)], color='Club',labels={'pop':'population of Canada'}, height=400, title='SCATTER PLOT')
             st.plotly_chart(fig2, use_container_width=True)
 
 
     with tab3:
-        st.header(" Total goals Conceded Per Team / Per Season")
+        st.header(" Total goals Conceded Per Team Per Season")
 
         
         option = st.selectbox(
@@ -84,7 +85,7 @@ with st.expander("Visualization 1"):
 
         goals_con = {'2010/11':'GoalsConceded10_11','2011/12':'GoalsConceded11_12','2012/13':'GoalsConceded12_13','2013/14':'GoalsConceded13_14','2014/15':'GoalsConceded14_15','2015/16':'GoalsConceded15_16','2016/17':'GoalsConceded16_17','2017/18':'GoalsConceded17_18','2018/19':'GoalsConceded18_19','2019/20':'GoalsConceded19_20'}
         if option in point.keys():
-            fig3 = px.scatter(data, x='Club', y=goals_con.get(option), size_max=50,size=goals_con.get(option) ,hover_data=[goals.get(option)], color='Club',labels={'pop':'population of Canada'}, height=400)
+            fig3 = px.scatter(data, x='Club', y=goals_con.get(option), size_max=50,size=goals_con.get(option) ,hover_data=[goals.get(option)], color='Club',labels={'pop':'population of Canada'}, height=400, title='SCATTER PLOT')
             st.plotly_chart(fig3, use_container_width=True)
 
 
@@ -98,34 +99,34 @@ with st.expander("Visualization 2"):
         fig4 = px.sunburst(
         club_df1,
         path=['Season', 'Club'], values='Position', hover_data=['Losses','Position'],
-        color='Club'
+        color='Club', title='SUNBURST'
         )
         st.plotly_chart(fig4, use_container_width=True)   
 
     with tab5:
         st.header("Total point across All seasons")
 
-        fig5 = px.line(club_df2, x="Season", y="Points", color='Club', hover_data=['Points'])
+        fig5 = px.line(club_df2, x="Season", y="Points", color='Club', hover_data=['Points'], title='LINE CHART')
         st.plotly_chart(fig5, use_container_width=True)
 
     with tab6:
         st.header("Win Percentage Per Team Per Season")
-        fig6 = px.treemap(clubs_df, path=[ 'Season','Club'], values='Win_percentage', color='Club',hover_data=['Draw_Percentage','Loss_Percentage'])
+        fig6 = px.treemap(clubs_df, path=[ 'Season','Club'], values='Win_percentage', color='Club',hover_data=['Draw_Percentage','Loss_Percentage'], title='TREEMAP')
         st.plotly_chart(fig6, use_container_width=True)
 
 with st.expander("Visualization 3"):
     # Page Tabs creation
-    tab7, tab8, tab9 = st.tabs(["Goals scored Per team for Each Season", "Goals Scored & Distribution by Team", "Goals Percentage Across all Season"])
+    tab7, tab8, tab9 = st.tabs(["Goals scored Per team for Each Season", "Total Goals Scored and Conceded Per team", "Goals Percentage Across all Season"])
     with tab7:
         st.header("Goals scored Per team for Each Season")
         option = st.selectbox(
-            'Select Season?',
+            'Select Clubs?',
             club_df3.Club.unique(), key='clubs')
 
         if option in club_df3.Club.unique():
             fig9 = px.histogram(club_df3[club_df3['Club'] == option], x='Club', y="GoalsScored",
                     color='Season', barmode='group',
-                    height=400)
+                    height=400, title='HISTOGRAM')
             st.plotly_chart(fig9, use_container_width=True)    
 
         else:
