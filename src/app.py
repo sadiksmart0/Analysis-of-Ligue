@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 
 # Loading Data and DataFrame
 
-data = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/Dataset/all_12_seasons.csv")
-clubs_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/Dataset/All_Ligue1.csv")
-extra_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/Dataset/all_match_stats.csv")
+data = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Dataset/all_12_seasons.csv")
+clubs_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Dataset/All_Ligue1.csv")
+extra_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Dataset/all_match_stats.csv")
 
 
 club_df1 = clubs_df.groupby(by=['Club','Season'], as_index=False).sum()
@@ -34,7 +34,7 @@ fairplay_df["Total_fouls"] = fairplay_df["HomeFouls"] + fairplay_df["AwayFouls"]
 
 #Site Image/logo
 
-image = Image.open('C:/Users/A.M. MUKTAR/DataVisualizationProject/Images/ligue_1.png')
+image = Image.open('C:/Users/A.M. MUKTAR/DataVisualizationProject/epldat10seasons/Images/ligue_1.png')
 
 st.image(image, caption='The French Ligue 1')
 
