@@ -15,6 +15,7 @@ data = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/Dataset/all_12
 clubs_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/Dataset/All_Ligue1.csv")
 extra_df = pd.read_csv("C:/Users/A.M. MUKTAR/DataVisualizationProject/Dataset/all_match_stats.csv")
 
+# Grouping the dataset
 
 club_df1 = clubs_df.groupby(by=['Club','Season'], as_index=False).sum()
 club_df2 = clubs_df.groupby(by=['Club','Season'], as_index=False)['Points'].sum()
@@ -26,7 +27,7 @@ club_df4 = club_df3.groupby(by='Club', as_index=False)['GoalsScored','GoalsConce
 fairplay_df = extra_df.groupby(by=["HomeTeam"], as_index=False)["HomeYellowCards","AwayYellowCards","HomeRedCards","AwayRedCards","HomeFouls","AwayFouls"].sum()
 fairplay_df["Total_YellowCards"] = fairplay_df["HomeYellowCards"] + fairplay_df["AwayYellowCards"]
 fairplay_df["Total_RedCards"] = fairplay_df["HomeRedCards"] + fairplay_df["AwayRedCards"]
-fairplay_df["Total_fouls"] = fairplay_df["HomeFouls"] + fairplay_df["AwayFouls"]
+fairplay_df["Total_Fouls"] = fairplay_df["HomeFouls"] + fairplay_df["AwayFouls"]
 
 
 
@@ -56,7 +57,7 @@ with st.expander("Insight 1"):
         st.header("Total Points Per Team for Season ", option)
         if option in point.keys():
             fig1 = px.bar(data, x='Club', y=point.get(option),hover_data=[point.get(option)], color='Club', height=400,text_auto='.2s')
-            fig1.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+            fig1.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False, title='BAR CHART')
             st.plotly_chart(fig1, use_container_width=True)
             
     with tab2:
@@ -75,7 +76,7 @@ with st.expander("Insight 1"):
 
 
     with tab3:
-        st.header(" Total goals Conceded Per Team / Per Season")
+        st.header(" Total goals Conceded Per Team Per Season")
 
         
         option = st.selectbox(
@@ -98,7 +99,7 @@ with st.expander("Insight 2"):
         fig4 = px.sunburst(
         club_df1,
         path=['Season', 'Club'], values='Position', hover_data=['Losses','Position'],
-        color='Club'
+        color='Club', title='SUNBURST'
         )
         st.plotly_chart(fig4, use_container_width=True)   
 
@@ -120,17 +121,17 @@ with st.expander("Insight 2"):
 
 with st.expander("Insight 3"):
     # Page Tabs creation
-    tab7, tab8, tab9 = st.tabs(["Goals scored Per team for Each Season", "Goals Scored & Distribution by Team", "Goals Percentage Across all Season"])
+    tab7, tab8, tab9 = st.tabs(["Goals scored Per team for Each Season", "Total Goals Scored and Conceded Per team", "Goals Percentage Across all Season"])
     with tab7:
         st.header("Goals scored Per team for Each Season")
         option = st.selectbox(
-            'Select Season?',
+            'Select Clubs?',
             club_df3.Club.unique(), key='clubs')
 
         if option in club_df3.Club.unique():
             fig9 = px.histogram(club_df3[club_df3['Club'] == option], x='Club', y="GoalsScored",
                     color='Season', barmode='group',
-                    height=400)
+                    height=400, title='HISTOGRAM')
             st.plotly_chart(fig9, use_container_width=True)    
 
         else:
